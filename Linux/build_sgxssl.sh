@@ -71,12 +71,12 @@ SGXSSL_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo $SGXSSL_ROOT
 if [[ $# -gt 0 ]] && [[ $1 == "linux-sgx" || $2 == "linux-sgx" ]] ; then
 	LINUX_BUILD_FLAG=LINUX_SGX_BUILD=1
-	SGXSDK_VERSION=`/bin/grep -m 1 "STRFILEVER" $SGXSSL_ROOT/../../../common/inc/internal/se_version.h | /bin/grep -o -E "[1-9]\.[0-9]"`
+	SGXSDK_VERSION=`/bin/grep -m 1 "STRFILEVER" $SGXSSL_ROOT/../../../common/inc/internal/se_version.h | /bin/grep -o -E "[1-9]\.[0-9]" | /usr/bin/head -n 1`
 	SGX_SDK_LIBS_PATH=$SGXSSL_ROOT/../../../build/linux
 else
 	LINUX_BUILD_FLAG=LINUX_SGX_BUILD=0
 	SGX_SDK=/opt/intel/sgxsdk
-	SGXSDK_VERSION=`/bin/grep -m 1 "Version:" $SGX_SDK/pkgconfig/libsgx_urts.pc | /bin/grep -o -E "[1-9]\.[0-9]"`
+	SGXSDK_VERSION=`pkg-config --modversion $SGX_SDK/pkgconfig/libsgx_urts.pc | /usr/bin/cut -d "." -f 1-2`
 	if [ -f $SGX_SDK/environment ]; then
 		source $SGX_SDK/environment || clean_and_ret 1
 	else
