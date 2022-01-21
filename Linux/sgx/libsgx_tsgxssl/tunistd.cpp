@@ -58,8 +58,9 @@ size_t sgxssl_write (int fd, const void *buf, size_t n)
 {
 	FSTART;
 
-	if (fd == FAKE_PIPE_WRITE_FD) {
+	if (fd == FAKE_PIPE_WRITE_FD || fd <= 2) {
 		// With pipes the function is used only by the engines/e_dasync.c (dummy async engine).
+		// Also, we disallow writes to stdin, stdout and stderr
 		SGX_UNSUPPORTED_FUNCTION(SET_ERRNO);
 
 		FEND;
@@ -89,8 +90,9 @@ size_t sgxssl_read(int fd, void *buf, size_t count)
 {
 	FSTART;
 
-	if (fd == FAKE_PIPE_READ_FD) {
+	if (fd == FAKE_PIPE_READ_FD || fd <= 2) {
 		// With pipes the function is used only by the engines/e_dasync.c (dummy async engine).
+		// Also, we disallow reads from stdin, stdout and stderr
 		SGX_UNSUPPORTED_FUNCTION(SET_ERRNO);
 
 		FEND;
