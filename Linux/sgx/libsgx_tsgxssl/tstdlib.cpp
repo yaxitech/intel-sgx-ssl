@@ -86,6 +86,11 @@ char *sgxssl_getenv(const char *name)
 		return NULL;
 	}
 
+	if (!strcmp(name, "SSL_CERT_FILE") || !strcmp(name, "SSL_CERT_DIR")) {
+		FEND;
+		return NULL;
+	}
+
 	SGX_UNREACHABLE_CODE(SET_ERRNO);
 
 	FEND;
